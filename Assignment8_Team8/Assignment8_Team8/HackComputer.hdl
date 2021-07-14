@@ -1,0 +1,37 @@
+/************************************************************
+ * 
+ * HackCPU.hdl : Chip HackCPU : Implementation of Hack CPU
+ *
+ * Version : 3.0
+ *
+ * A 16 bit Computer, with a 16 bit Hack CPU implementation and memory units sized 64KB for ROM and 128B for RAM
+ * Built on Von Neumann Architecture, this Hack Computer has instructions preloaded into the ROM and data memory as RAM.
+ * It has just one pin : reset, that resets the program counter back to zero so that the program executes again from the beginning.
+ * Data bus is 16 bits; and address bus is 14 bits for RAM and 15 bits for ROM.
+ *
+ * Author : Team 8 : Vedant(CS19B074), Sanchit(CS19B071), Parth(CS19B065)
+ * Created : 
+ * Last Modified :
+ * 
+ * User chip dependancies : HackCPU.hdl
+ * Bugs :
+ ***********************************************************************/
+
+CHIP HackComputer {
+    IN reset;
+
+    PARTS:
+
+    //Read only memory chip used as Instruction Memory
+    ROM32K(address=pc, out=instruction);
+
+    //Hack CPU : Implementation in file : HackCPU.hdl
+    HackCPU(inM=inM, instruction=instruction, reset=reset, outM=data, writeM=writeM, addressM[0..5]=addressRAM, pc=pc);
+
+    //Random Access Memory chip used as Data memory
+    RAM64(in=data, load=writeM, address=addressRAM, out=inM);
+
+    
+    
+}
+

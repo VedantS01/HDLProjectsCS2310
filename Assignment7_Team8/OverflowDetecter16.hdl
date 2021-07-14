@@ -1,0 +1,27 @@
+/*********************************************************************
+ *
+ * $id$
+ * 16 bit overflow detecter for signed and unsigned adder outputs
+ *
+ * Logic : For signed, overflow exists if carry into the sign bit does not match carry out of the sign bit.
+ *       : For unsigned, overflow exists if carry out of the MSB does not match oper bit (A'/S)
+ *       : We can use mux logic here (which we have used in the code) to determine the overflow
+ *
+ * Version: 1.0
+ * Author: Vedant Ashish Saboo , CS19B074
+ *
+ * Bugs:
+ *******************************************************************/
+
+CHIP OverflowDetecter16 {
+    IN c15, c16, oper, signed;
+    OUT of;
+
+    PARTS:
+    Xor(a=c15, b=c16, out=tsigned);
+    Xor(a=c16, b=oper, out=tunsigned);
+    Not(in=signed, out=unsigned);
+    And(a=tsigned, b=signed, out=t1);
+    And(a=tunsigned, b=unsigned, out=t2);
+    Or(a=t1, b=t2, out=of);
+}

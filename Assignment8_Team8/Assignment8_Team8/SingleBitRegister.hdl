@@ -1,0 +1,21 @@
+/**************************
+ * $id$
+ * SingleBitRegister : a bit memory unit built using DFF
+ *
+ * Author : Sanchit Gupta , CS19B071
+ * Created : 2:05 PM 10/28/2020
+ * Last Modified : 2:05 PM 10/28/2020
+ *
+ * Dependencies : Mux2to1.hdl
+ *
+ * Bugs :
+ *****************************/
+
+CHIP SingleBitRegister {
+    IN in, load;
+    OUT out;
+
+    PARTS:
+    Mux2to1(in0=outDFF, in1=in, s=load, out=inDFF);
+    DFF(in=inDFF, out=outDFF, out=out);
+}

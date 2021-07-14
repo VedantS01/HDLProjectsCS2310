@@ -1,0 +1,21 @@
+/*******************************
+ *
+ * Mux : 2 to 1 multiplexer
+ *
+ * Version: 1.0
+ * Author : Vedant
+ *
+ * Bugs :
+ *********************************/
+
+CHIP Mux {
+    IN in0, in1, s;
+    OUT out;
+
+    PARTS:
+    Not(in=s, out=nots);
+    And(a=in0, b=nots, out=t0);
+    And(a=in1, b=s, out=t1);
+    Or(a=t0, b=t1, out=out);
+    
+}

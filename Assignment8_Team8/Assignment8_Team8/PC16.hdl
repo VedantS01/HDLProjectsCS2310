@@ -1,0 +1,31 @@
+/**************************
+ * $id$
+ * PC16 : 16 bit Program Counter
+ * Version : 1.1 : removed unncessary pin
+ *
+ * Author : Vedant Ashish Saboo , CS19B074
+ * Created : 2:05 PM 10/28/2020
+ * Last Modified : 2:33 PM 10/28/2020
+ *
+ * Dependencies : Mux2to1.hdl
+ *
+ * Bugs :
+ *****************************/
+
+
+CHIP PC16 {
+    IN in[16], reset, j; //j and load values come from CPU Instruction Decoder, in values come from ARegister in CPU. reset value comes directly from CPU.
+    OUT out[16]; //out value goes to the CPU
+
+    PARTS:
+    
+    //Mux PC
+    Mux4Way16(a=AdderOUT, b=in, c=false, d=false, sel[0]=j, sel[1]=reset, out=inPC);
+
+    //PC Register
+    Register16(in=inPC, load=true, out=outPC, out=out);
+
+    //Adder16
+    Adder16(x=outPC, y[0]=true, y[1..15]=false, oper=false, sum=AdderOUT);
+  
+}

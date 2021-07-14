@@ -1,0 +1,72 @@
+/************************************************************
+ * 
+ * HackCPU.hdl : Chip HackCPU : Implementation of Hack CPU
+ *
+ * Version : 1.0
+ *
+ * 16 bit CPU, internally hosting a 16 bit Hack ALU and a control unit that decodes a 16 bit Hack instruction.
+ * Contains 2 registers, A and D and a Program Counter.
+ *
+ * Author : Team 8 : Vedant(CS19B074), Sanchit(CS19B071), Parth(CS19B065)
+ * Created : 
+ * Last Modified : 10:12 PM 11/9/2020
+ *
+ * Dependancies : InstructionDecoder.hdl, PC16.hdl, HackALU16.hdl, Register16.hdl, SingleBitRegister.hdl
+ * 
+ * Bugs : ALERT!
+ ***********************************************************************/
+
+CHIP HackCPU {
+    IN inM[16], instruction[16], reset;
+    OUT writeM, outM[16], addressM[15], pc[15];
+
+    PARTS:
+
+    //InstructionDecoder or the Control Unit : generates control signal for different parts of the CPU
+    InstructionDecoder(instruction=instruction, 
+        selMux1=selMux1,
+        selMux2=selMux2,
+        writeA=writeA,
+        writeM=writeM,
+        writeD=writeD,
+        zx=zx, nx=nx,
+        zy=zy, ny=ny,
+        f=f, no=no,
+        jump=jump);
+    
+    //Mux1
+    Mux16(in0=ALUout, in1=instruction, s=selMux1, out=dataA);
+
+    //Accumulator
+    Register16(in=dataA, load=writeA, out=dataPC, out=dataAMux2, out[0..14]=addressM);
+
+    //Mux2
+    Mux16(in0=dataAMux2, in1=inM, s=selMux2, out=operYALU);
+
+    //D Register
+    Register16(in=ALUout, load=writeD, out=operXALU);
+
+    //ALU
+    HackALU16(x=operXALU, 
+        y=operYALU, 
+        zx=zx, 
+        nx=nx, 
+        zy=zy, 
+        ny=ny, 
+        f=f, 
+        no=no, 
+        out=ALUout, 
+        out=outM, 
+        zr=zr, 
+        ng=ng);
+    
+    //Jump Detecter
+    JumpDetecter(jump=jump, zr=zr, ng=ng, j=j);
+
+    //PC
+    PC16(in=dataPC, reset=reset, j=j, out[0..14]=pc);
+    
+    
+    
+}
+
