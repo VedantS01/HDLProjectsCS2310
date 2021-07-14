@@ -1,0 +1,99 @@
+/******************************************************************* 
+ *
+ * $id$
+ * 8 bit Comparator :
+ *      Implementation : Compares each bit one by one and if all are same, equal pin is set  
+ * Version : 1.1
+ * IN : a0,a1,a2,a3,a4,a5,a6,a7,b0,b1,b2,b3,b4,b5,b6,b7
+ * OUT : small,equal,large
+ * Logic : if A = B then equal = 1, small = 0, large = 0
+ *          : if A < B then equal = 0, small = 1, large = 0
+ *          : if A > B then equal = 0, small = 0, large = 1
+ * Author : Sanchit Gupta, CS19B071
+ *
+ * Created : 11:06 02-09-2020
+ *
+ * Last Mdoified : 23:11 06-09-2020 by sanchit
+ *
+ * Bugs : 
+ * NOTE: This comparator performs additional functions of finding out which of the numbers represented by the bit sequences is larger, if they are not equal
+ *******************************************************************************/
+
+CHIP Comparator8Bit {
+    
+    IN a0,a1,a2,a3,a4,a5,a6,a7,b0,b1,b2,b3,b4,b5,b6,b7;
+    OUT small,equal,large;
+
+    PARTS:
+    XNor(a=a0,b=b0,out=x0);
+    XNor(a=a1,b=b1,out=x1);
+    XNor(a=a2,b=b2,out=x2);
+    XNor(a=a3,b=b3,out=x3);
+    XNor(a=a4,b=b4,out=x4);
+    XNor(a=a5,b=b5,out=x5);
+    XNor(a=a6,b=b6,out=x6);
+    XNor(a=a7,b=b7,out=x7);
+
+    And(a=x0,b=x1,out=tempand1);
+    And(a=x2,b=x3,out=tempand2);
+    And(a=x4,b=x5,out=tempand3);
+    And(a=x6,b=x7,out=tempand4);
+
+    And(a=tempand1,b=tempand2,out=tempandand1);
+    And(a=tempand3,b=tempand4,out=tempandand2);
+
+    And(a=tempandand1,b=tempandand2,out=equal);
+    And(a=tempandand1,b=tempandand2,out=tempequal);
+
+    Not(in=a0,out=nota0);
+    Not(in=a1,out=nota1);
+    Not(in=a2,out=nota2);
+    Not(in=a3,out=nota3);
+    Not(in=a4,out=nota4);
+    Not(in=a5,out=nota5);
+    Not(in=a6,out=nota6);
+    Not(in=a7,out=nota7);
+
+    And(a=nota7,b=b7,out=templess1);
+
+    And(a=x7,b=nota6,out=temp1);
+    And(a=temp1,b=b6,out=templess2);
+
+    And(a=tempand4,b=nota5,out=temp2);
+    And(a=temp2,b=b5,out=templess3);
+
+    And(a=tempand4,b=x5,out=temp3);
+    And(a=nota4,b=b4,out=temp4);
+    And(a=temp3,b=temp4,out=templess4);
+
+    And(a=tempand4,b=tempand3,out=temp5);
+    And(a=nota3,b=b3,out=temp6);
+    And(a=temp5,b=temp6,out=templess5);
+
+    And(a=temp5,b=x3,out=temp7);
+    And(a=nota2,b=b2,out=temp8);
+    And(a=temp7,b=temp8,out=templess6);
+
+    And(a=temp5,b=tempand2,out=temp9);
+    And(a=nota1,b=b1,out=temp10);
+    And(a=temp10,b=temp9,out=templess7);
+
+    And(a=temp9,b=x1,out=temp11);
+    And(a=nota0,b=b0,out=temp12);
+    And(a=temp11,b=temp12,out=templess8);
+
+    Or(a=templess1,b=templess2,out=tempans1);
+    Or(a=templess3,b=templess4,out=tempans2);
+    Or(a=templess5,b=templess6,out=tempans3);
+    Or(a=templess7,b=templess8,out=tempans4);
+
+    Or(a=tempans1,b=tempans2,out=temptempans1);
+    Or(a=tempans3,b=tempans4,out=temptempans2);
+
+    Or(a=temptempans1,b=temptempans2,out=small);
+    Or(a=temptempans1,b=temptempans2,out=tempsmall);
+
+    Or(a=tempequal,b=tempsmall,out=temptemp);
+    Not(in=temptemp,out=large);
+
+}

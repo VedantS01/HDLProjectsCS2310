@@ -1,0 +1,63 @@
+/*************************************
+ *
+ * 3 to 8 bit binary decoder implementation
+ *
+ * version: 1.1
+ * IN: s2 , s1 , s0 , enable (en)
+ * OUT: y7 , y6 , y5 , y4 , y3 , y2 , y1 , y0 
+ *
+ * author: Vedant Ashish Saboo , CS19B074
+ *
+ * created: 20:56 24-08-2020
+ *
+ * last modified: 22:33 24-08-2020 by vedant
+ *
+ * File: Decoder3to8bit.hdl - C:\Users\Dell\Desktop\nand2teris\nand2tetris\user-files\Decoder3to8bit.hdl
+ * 
+ ********************************************/
+
+CHIP Decoder3to8bit {
+
+	IN s0, s1, s2, en ;
+	OUT y0 ,y1,
+	y2,
+	y3,
+	y4,
+	y5,
+	y6,
+	y7 ;
+
+	PARTS:
+	
+	Not ( in = s2 , out = nots2 ) ;
+	Not ( in = s1 , out = nots1 ) ;
+	Not ( in = s0, out = nots0 ) ;
+
+	And ( a = nots2 , b = nots1 , out = temp120 ) ;
+	And ( a = nots2 , b = nots1 , out = temp121 ) ;
+	And ( a = nots2 , b = s1 , out = temp122 ) ;
+	And ( a = nots2 , b = s1 , out = temp123 ) ;
+	And ( a = s2 , b = nots1 , out = temp124 ) ;
+	And ( a = s2 , b = nots1 , out = temp125 ) ;
+	And ( a = s2 , b = s1 , out = temp126 ) ;
+	And ( a = s2 , b = s1 , out = temp127 ) ; 
+
+	And ( a = en , b = nots0 , out = temp00 ) ;
+	And ( a = en , b = s0 , out = temp01 ) ;
+	And ( a = en , b = nots0 , out = temp02 ) ;
+	And ( a = en , b = s0 , out = temp03 ) ;
+	And ( a = en , b = nots0 , out = temp04 ) ;
+	And ( a = en , b = s0 , out = temp05 ) ;
+	And ( a = en , b = nots0 , out = temp06 ) ;
+	And ( a = en , b = s0 , out = temp07 ) ;
+
+	And ( a = temp120 , b = temp00 , out = y0 ) ;
+	And ( a = temp121 , b = temp01 , out = y1 ) ;
+	And ( a = temp122 , b = temp02 , out = y2 ) ;
+	And ( a = temp123 , b = temp03 , out = y3 ) ;
+	And ( a = temp124 , b = temp04 , out = y4 ) ;
+	And ( a = temp125 , b = temp05 , out = y5 ) ;
+	And ( a = temp126 , b = temp06 , out = y6 ) ;
+	And ( a = temp127 , b = temp07 , out = y7 ) ;
+}
+	

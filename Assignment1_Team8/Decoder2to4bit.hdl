@@ -1,0 +1,33 @@
+/****************************
+ * 2 to 4 bit decoder implementation
+ *
+ * version: 1.1
+ * IN: s1, s0, en
+ *OUT: y0, y1 , y2 , y3
+ *
+ * author: Vedant Ashish Saboo, CS19B074
+ * 
+ * created: Aug 24 2020 15:52
+ *
+ * last modified: Aug 24 2020 20:38 by vedant
+ *
+ *****************************/
+
+CHIP Decoder2to4bit {
+	IN s0 , s1, en ;
+	OUT y0 , y1 , y2 , y3 ;
+
+	PARTS: 
+	Not (in=s0 , out=nots0) ;
+	Not (in=s1 , out=nots1) ;
+
+	And (a=nots0 , b=nots1 , out=tempy0) ;
+	And (a=nots1 , b=s0 , out=tempy1) ;
+	And (a=s1 , b=nots0 , out=tempy2) ;
+	And (a=s0 , b=s1 , out=tempy3) ;
+
+	And (a=tempy0 , b=en , out=y0) ;
+	And (a=tempy1 , b=en , out=y1) ;
+	And (a=tempy2 , b=en , out=y2) ;
+	And (a=tempy3 , b=en , out=y3) ;
+}

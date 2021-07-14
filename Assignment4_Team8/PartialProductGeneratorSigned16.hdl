@@ -1,0 +1,35 @@
+/************************************
+ *
+ * PartialProductGeneratorSigned16 : Generates partial products for 8 bit signed multiplication
+ *
+ * Author : Vedant Ashish Saboo , CS19B074
+ * Version : 2.6
+ *
+ * Bugs : 
+ *************************************/
+
+CHIP PartialProductGeneratorSigned16 {
+    IN x[16], y[16];
+    OUT pp0[16], pp1[16], pp2[16], pp3[16], pp4[16], pp5[16], pp6[16], pp7[16];
+
+    PARTS:
+    SingleBitMultiply16(in=x, bit=y[0], out=pp0);
+    SingleBitMultiply16(in=x, bit=y[1], out[0..14]=pp1[1..15]);
+    Not(in=true, out=pp1[0]);
+    SingleBitMultiply16(in=x, bit=y[2], out[0..13]=pp2[2..15]);
+    Not(in=true, out=pp2[0], out=pp2[1]);
+    SingleBitMultiply16(in=x, bit=y[3], out[0..12]=pp3[3..15]);
+    Not(in=true, out=pp3[0], out=pp3[1], out=pp3[2]);
+    SingleBitMultiply16(in=x, bit=y[4], out[0..11]=pp4[4..15]);
+    Not(in=true, out=pp4[0], out=pp4[1], out=pp4[2], out=pp4[3]);
+    SingleBitMultiply16(in=x, bit=y[5], out[0..10]=pp5[5..15]);
+    Not(in=true, out=pp5[0], out=pp5[1], out=pp5[2], out=pp5[3], out=pp5[4]);
+    SingleBitMultiply16(in=x, bit=y[6], out[0..9]=pp6[6..15]);
+    Not(in=true, out=pp6[0], out=pp6[1], out=pp6[2], out=pp6[3], out=pp6[4], out=pp6[5]);
+    Not16(in=x, out=notx);
+    SingleBitMultiply16(in=notx, bit=y[7], out[0..8]=pp7[7..15]);
+    And(a=y[7], b=true, out=pp7[0], out=pp7[1], out=pp7[2], out=pp7[3], out=pp7[4], out=pp7[5], out=pp7[6]);
+    
+
+
+}

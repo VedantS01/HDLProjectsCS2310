@@ -1,0 +1,55 @@
+/*****************************************************
+ *
+ * $id$
+ * File : SignedIntegerMultiplier8.hdl
+ * CHIP name : SignedIntegerMultiplier8
+ * IN :
+ * OUT :
+ * Purpose :
+ * 
+ * Version : 1.0
+ * Author : Vedant Ashish Saboo
+ * Created : 17-09-2020 15:54
+ * Last Modified : 17-09-2020 15:54
+ *
+ * Internal Chips : SignExtend8to16, PartialProductGeneratorSigned16, SingleBitMultiply, CSAReducer16, Adder16, OverflowDetecterSignedM8
+ *
+ * Bugs :
+ ************************************************************/
+
+CHIP SignedIntegerMultiplier8 {
+    IN x[8],y[8];
+    OUT out[8], out16[16],of;
+
+    PARTS:
+    SignExtend8to16(in=x, out=x0); //extending 8 bit numbers to 16 using sign bit extensions
+    SignExtend8to16(in=y, out=y0); //extending 8 bit numbers to 16 using sign bit extension
+
+    //generates partial products pp0 to pp7. Note, pp7 generation is a bit different from the others.
+    PartialProductGeneratorSigned16(x=x0, y=y0, pp0=pp0, pp1=pp1, pp2=pp2, pp3=pp3, pp4=pp4, pp5=pp5, pp6=pp6, pp7=pp7);
+
+    //Carry Save Adder 3 to 2 summand reduction levels (There are 3 levels of CSA Summand Reducers)
+    CSAReducer16(a=pp0, b=pp1, c=pp2, out1=l00, out2=l01, c0=false);
+    CSAReducer16(a=pp3, b=pp4, c=pp5, out1=l02, out2=l03, c0=false);
+    CSAReducer16(a=pp6, b=pp7, c=l00, out1=l10, out2=l11, c0=y[7]); //c0 = y[7] (!This is crucial. By doing this, and respective change in technique of generating partial products, we can achieve the same functionality with one summand less)
+    CSAReducer16(a=l01, b=l02, c=l03, out1=l12, out2=l13, c0=false);
+    CSAReducer16(a=l10, b=l11, c=l12, out1=l20, out2=l21, c0=false);
+    CSAReducer16(a=l13, b=l20, c=l21, out1=l30, out2=l31, c0=false);
+
+    //Final Adder16 module ( 2 to 1 summand reducer ) That generates the product.
+    Adder16(x=l30, y=l31, oper=false, sum[0..7]=out, sum=outT, signed=true, sum=out16);
+
+    //overflow detection mechanism.
+    OverflowDetecterSignedM8(signx=x[7], signy=y[7], ans=outT, out=ofT);
+
+    //We also need to check whether the answer is completely zero, since plus zero and minus zero are same.
+    SetZeroFlag8(in=x, zero=zeroX);
+    SetZeroFlag8(in=y, zero=zeroY);
+    Or(a=zeroX, b=zeroY, out=zero);
+    Not(in=zero, out=notzero);
+    
+    //finally, there will be overflow, if there is a detection by the overflow system, as well when
+    And(a=notzero, b=ofT, out=of);
+    
+}
+

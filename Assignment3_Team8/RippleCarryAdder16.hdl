@@ -1,0 +1,58 @@
+/***********************************************************
+ *
+ * $id$
+ * 16 bit Ripple Carry Adder implemented by using n full adders sequentially
+ * Chip name : RippleCarryAdder16
+ * IN : x[16] , y[16] , oper , signed
+ * OUT : sum[16] , cy , of
+ *
+ * Version : 2.9
+ * Author : Parth Ajmera , CS19B065
+ * Created : 21:42 08-09-2020
+ * Last Modified : 13:13 09-14-2020 : fixed OverflowDetecter16 for detecting overflow in signed and unsigned opearands
+ *
+ * Chips used internally : SingleAdder, OverflowDeetecter16
+ * Bugs : 
+ *******************************************************************/
+
+CHIP RippleCarryAdder16{
+    IN x[16],y[16],oper,signed;
+    OUT sum[16],cy,of;
+
+    PARTS:
+	Xor(a=oper,b=y[0],out=z0);
+	Xor(a=oper,b=y[1],out=z1);
+	Xor(a=oper,b=y[2],out=z2);
+	Xor(a=oper,b=y[3],out=z3);
+	Xor(a=oper,b=y[4],out=z4);
+	Xor(a=oper,b=y[5],out=z5);
+	Xor(a=oper,b=y[6],out=z6);
+	Xor(a=oper,b=y[7],out=z7);
+	Xor(a=oper,b=y[8],out=z8);
+	Xor(a=oper,b=y[9],out=z9);
+	Xor(a=oper,b=y[10],out=z10);
+	Xor(a=oper,b=y[11],out=z11);
+	Xor(a=oper,b=y[12],out=z12);
+	Xor(a=oper,b=y[13],out=z13);
+	Xor(a=oper,b=y[14],out=z14);
+	Xor(a=oper,b=y[15],out=z15);
+
+	SingleAdder(a=x[0],b=z0,c0=oper,c1=c1,s=sum[0]);
+	SingleAdder(a=x[1],b=z1,c0=c1,c1=c2,s=sum[1]);
+	SingleAdder(a=x[2],b=z2,c0=c2,c1=c3,s=sum[2]);
+	SingleAdder(a=x[3],b=z3,c0=c3,c1=c4,s=sum[3]);
+	SingleAdder(a=x[4],b=z4,c0=c4,c1=c5,s=sum[4]);
+	SingleAdder(a=x[5],b=z5,c0=c5,c1=c6,s=sum[5]);
+	SingleAdder(a=x[6],b=z6,c0=c6,c1=c7,s=sum[6]);
+	SingleAdder(a=x[7],b=z7,c0=c7,c1=c8,s=sum[7]);
+	SingleAdder(a=x[8],b=z8,c0=c8,c1=c9,s=sum[8]);
+	SingleAdder(a=x[9],b=z9,c0=c9,c1=c10,s=sum[9]);
+	SingleAdder(a=x[10],b=z10,c0=c10,c1=c11,s=sum[10]);
+	SingleAdder(a=x[11],b=z11,c0=c11,c1=c12,s=sum[11]);
+	SingleAdder(a=x[12],b=z12,c0=c12,c1=c13,s=sum[12]);
+	SingleAdder(a=x[13],b=z13,c0=c13,c1=c14,s=sum[13]);
+	SingleAdder(a=x[14],b=z14,c0=c14,c1=c15,s=sum[14]);
+	SingleAdder(a=x[15],b=z15,c0=c15,c1=cy,c1=c16,s=sum[15]);
+
+	OverflowDetecter16(c15=c15, c16=c16, of=of, oper=oper, signed=signed);	
+}

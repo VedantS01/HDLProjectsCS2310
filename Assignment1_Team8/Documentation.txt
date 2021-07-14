@@ -1,0 +1,33 @@
+Course : CS2310 Fundamentals of Computer Systems Design Lab
+
+Team : 8
+Members:
+1. Vedant Ashish Saboo , CS19B074
+2. Sanchit Gupta , CS19B071
+3. Parth Ajmera , CS19B065
+
+ASSIGNMENT 1
+
+Submission files include :
+- Encoder4to2bit.hdl
+- Encoder4to2bit.tst
+- Encoder4to2bit.out
+- PriorityEncoder42.hdl
+- PriorityEncoder42.tst
+- PriorityEncoder42.out
+- Decoder2to4bit.hdl
+- Decoder2to4bit.tst
+- Decoder2to4bit.out
+- Encoder83.hdl
+- Encoder83.tst
+- Encoder83.out
+- PriorityEncoder8to3bit.hdl
+- PriorityEncoder8to3bit.tst
+- PriorityEncoder8to3bit.out
+- Decoder3to8bit.hdl
+- Decoder3to8bit.tst
+- Decoder3to8bit.out
+- PE83Design.pdf -- Contains the design of the circuit used for Priority Encoder 8 to 3 bit
+
+
+

@@ -1,0 +1,45 @@
+/*
+Author        :- Parth Ajmera cs19b065
+DateOfCreation:- 24-8-20 4:00 pm
+Last Modified:- 07:40 31-08-2020
+Purpose       :- 4-2 bit encoder
+Logic         :- An encoder deals with 2^n inputs and n outputs where
+                 we deal with only one high input, typically ith bit.
+                 for ith bit=1 and rest as 0, the output binary number
+		 must be equal to i. ie, in case of x3=1, output number
+		 s1,s0 should be 3 ie 1,1 each.
+
+		for 4-2 bit encoder
+		s0=x1+x3;
+		s1=x2+x3;
+*/
+
+CHIP Encoder4to2bit 
+{
+    IN x0,x1,x2,x3;
+    OUT s0,s1,en;
+
+    PARTS:
+    Or(a=x1,b=x3,out=s0);
+
+    Or(a=x2,b=x3,out=s1);
+
+    Not(in=x0,out=notx0);
+    Not(in=x1,out=notx1);
+    Not(in=x2,out=notx2);
+    Not(in=x3,out=notx3);
+    And(a=notx0,b=notx1,out=t1);
+    And(a=notx2,b=notx3,out=t3);
+    And(a=notx2,b=x3,out=t4);
+    And(a=t4,b=t1,out=w3);
+    And(a=x2,b=notx3,out=t5);
+    And(a=t1,b=t5,out=w2);
+    And(a=notx0,b=x1,out=t2);
+    And(a=t2,b=t3,out=w1);
+    And(a=x0,b=notx1,out=t6);
+    And(a=t6,b=t3,out=w0);
+    Or(a=w0,b=w1,out=d1);
+    Or(a=w2,b=w3,out=d2);
+    Or(a=d1,b=d2,out=en);
+
+}

@@ -1,0 +1,102 @@
+/******************************************************************* 
+ *
+ * $id$
+ * 2 bit 1 to 8 Demultiplexer :
+ *      Implementation : 1 to 8 demultiplexer, operating with 2bit data   
+ * Version : 2.6
+ * IN : d0 , d1 , s0 , s1 , s2
+ * OUT : y00 , y10 , y20 , y30 , y40 , y50 , y60 , y70 , y01 , y11 , y21 , y31 , y41 , y51 , y61 , y71;
+ * Logic : if s2, s1 and s0, the select lines; the number represented by them is the device active
+ *       : if device i is active, d1 is fed to yi1 and d0 is fed to yi0
+ *
+ * Author : Sanchit Gupta, CS19B071
+ *
+ * Created : 11:06 02-09-2020
+ *
+ * Last Mdoified : 21:03 06-09-2020 by sanchit
+ *
+ * Bugs : 
+ *******************************************************************************/
+
+
+
+CHIP Demux2bit1to8 {
+    IN d0,d1,s0,s1,s2;
+    OUT y00,y10,y20,y30,y40,y50,y60,y70,y01,y11,y21,y31,y41,y51,y61,y71;
+
+    PARTS:
+
+    Not(in=s0,out=nots0);
+    Not(in=s1,out=nots1);
+    Not(in=s2,out=nots2);
+
+    And(a=s0,b=s1,out=temp071);
+    And(a=s2,b=d0,out=temp072);
+    And(a=temp071,b=temp072,out=y70);
+
+    And(a=d0,b=s2,out=temp061);
+    And(a=s1,b=nots0,out=temp062);
+    And(a=temp061,b=temp062,out=y60);
+
+    And(a=d0,b=s2,out=temp051);
+    And(a=nots1,b=s0,out=temp052);
+    And(a=temp051,b=temp052,out=y50);
+
+    And(a=d0,b=s2,out=temp041);
+    And(a=nots1,b=nots0,out=temp042);
+    And(a=temp041,b=temp042,out=y40);
+
+    And(a=d0,b=nots2,out=temp031);
+    And(a=s1,b=s0,out=temp032);
+    And(a=temp031,b=temp032,out=y30);
+
+    And(a=d0,b=nots2,out=temp021);
+    And(a=s1,b=nots0,out=temp022);
+    And(a=temp021,b=temp022,out=y20);
+
+    And(a=d0,b=nots2,out=temp011);
+    And(a=nots1,b=s0,out=temp012);
+    And(a=temp011,b=temp012,out=y10);
+
+    And(a=d0,b=nots2,out=temp001);
+    And(a=nots1,b=nots0,out=temp002);
+    And(a=temp001,b=temp002,out=y00);
+
+    And(a=s0,b=s1,out=temp171);
+    And(a=s2,b=d1,out=temp172);
+    And(a=temp171,b=temp172,out=y71);
+
+    And(a=d1,b=s2,out=temp161);
+    And(a=s1,b=nots0,out=temp162);
+    And(a=temp161,b=temp162,out=y61);
+
+    And(a=d1,b=s2,out=temp151);
+    And(a=nots1,b=s0,out=temp152);
+    And(a=temp151,b=temp152,out=y51);
+
+    And(a=d1,b=s2,out=temp141);
+    And(a=nots1,b=nots0,out=temp142);
+    And(a=temp141,b=temp142,out=y41);
+
+    And(a=d1,b=nots2,out=temp131);
+    And(a=s1,b=s0,out=temp132);
+    And(a=temp131,b=temp132,out=y31);
+
+    And(a=d1,b=nots2,out=temp121);
+    And(a=s1,b=nots0,out=temp122);
+    And(a=temp121,b=temp122,out=y21);
+
+    And(a=d1,b=nots2,out=temp111);
+    And(a=nots1,b=s0,out=temp112);
+    And(a=temp111,b=temp112,out=y11);
+
+    And(a=d1,b=nots2,out=temp101);
+    And(a=nots1,b=nots0,out=temp102);
+    And(a=temp101,b=temp102,out=y01);
+
+
+
+
+
+
+}

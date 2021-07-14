@@ -1,0 +1,22 @@
+/*********************************************************************
+ *
+ * $id$
+ * 1 bit Full Adder circuit implementation
+ *
+ * Version: 1.0
+ * Author: Parth Ajmera , CS19B065
+ *
+ * Bugs:
+ *******************************************************************/
+
+CHIP SingleAdder{
+	IN a,b,c0;
+	OUT c1,s;
+
+    PARTS:
+	Xor(a=a,b=b,out=axorb);
+	Xor(a=axorb,b=c0,out=s);
+	And(a=a,b=b,out=t1);
+	And(a=axorb,b=c0,out=t2);
+	Or(a=t1,b=t2,out=c1);
+}

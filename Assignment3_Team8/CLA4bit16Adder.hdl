@@ -1,0 +1,30 @@
+/***********************************************************
+ *
+ * $id$
+ * 16 bit Adder / Subtracter based on 4 4-bit Carry Look-ahead chips, without using higher order propogate and generate terms.
+ * Chip name : RippleCarryAdder16
+ * IN : x[16] , y[16] , oper , signed
+ * OUT : sum[16] , cy , of
+ *
+ * Version : 2.17
+ * Author : Sanchit Gupta , Cs19B071
+ * Created : 21:42 08-09-2020
+ * Last Modified : 13:13 09-14-2020 : fixed OverflowDetecter16 for detecting overflow in signed and unsigned opearands
+ *
+ * Chips used internally : Inverter16, Xor16, GenerateCarry16, OverflowDeetecter16
+ * Bugs : 
+ *******************************************************************/
+
+CHIP CLA4bit16Adder {
+    IN x[16],y[16],oper,signed;
+    OUT sum[16],cy,of;
+
+    PARTS:
+    Inverter16(in=y,bit=oper,out=z);
+    Xor16(a=x,b=z,out=p);
+    And16(a=x,b=z,out=g);
+    GenerateCarry16(p=p,g=g,c0=oper,c=c,cout=cy,cout=c16,c[15..15]=c15);
+    Xor16(a=c,b=p,out=sum);
+    OverflowDetecter16(c15=c15, c16=c16, of=of, oper=oper, signed=signed);
+    
+}

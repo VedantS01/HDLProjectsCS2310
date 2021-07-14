@@ -1,0 +1,55 @@
+/*********************************************************************************
+ *
+ * $id$
+ * File : HackALU16.hdl
+ * Chip : HackALU16 : 16 bit Hack ALU
+ *
+ * Version : 1.0
+ *
+ * Author : Team 8 : Vedant (CS19B074), Sanchit (CS19B071), Parth (CS19B065)
+ * Created : 12-10-2020 17:05
+ * Last Modified : 5:44 PM 10/19/2020 by vedant
+ *
+ * Bugs : 
+ ***********************************************************************************/
+
+CHIP HackALU16 {
+    IN x[16], y[16], zx, nx, zy, ny, f, no; //input
+    OUT out[16], zr, ng; //output
+
+    PARTS:
+
+    //first mux16 block for resolving zx indicator
+    Mux16(in0=x, in1=false, s=zx, out=x1);
+
+    //second parallel mux16 block for resolving zy indicator...
+    Mux16(in0=y, in1=false, s=zy, out=y1);
+    
+
+    //inverter16 (basically xors 16 input bits with a single bit) for resolving nx indicator
+    Inverter16(in=x1, bit=nx, out=x2);
+
+    //inverter16 (basically xors 16 input bits with a single bit) for resolving ny indicator
+    Inverter16(in=y1, bit=ny, out=y2);
+
+    //adder block. adds 16 bit signed numbers.
+    Adder16(x=x2, y=y2, signed=true, oper=false, sum=out1);
+
+    //ander block. performs and operations on 2 16-bit-buses.
+    And16(a=x2, b=y2, out=out0);
+
+    //mux16 block to choose between adder and ander. uses f indicator.
+    Mux16(in0=out0, in1=out1, s=f, out=outN);
+
+    //final inverter block for resolving no indicator.
+    Inverter16(in=outN, bit=no, out=out, out[0..7]=outT0, out[8..15]=outT1, out[15]=ng); //ng is the sign
+
+    //zero flag detection
+    Or8Way(in=outT0, out=notzr0);
+    Or8Way(in=outT1, out=notzr1);
+    Or(a=notzr0, b=notzr1, out=notzr);
+    Not(in=notzr, out=zr); 
+    
+    //end of code
+    
+}

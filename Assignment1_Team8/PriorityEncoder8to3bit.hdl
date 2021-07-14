@@ -1,0 +1,47 @@
+/*************************************************
+ *
+ * Priority Encoder 8 to 3 bit encoder, with highest priority to the most significant bit
+ * 
+ * Author : Vedant Ashish Saboo , CS19B074
+ *
+ * Version : 1.0
+ * 
+ * IN: x7 , x6 , x5 , x4 , x3 , x2 , x1 , x0
+ * OUT: s2 , s1 , s0 , en (enable)
+ *
+ * Created : 12:52 31-08-2020
+ * Last Modified : 16:17 31-08-2020 by vedant
+ * 
+ * BUGS:
+ *************************************************************/
+
+ CHIP PriorityEncoder8to3bit {
+     IN x7, x6, x5, x4, x3, x2, x1, x0 ;
+     OUT s2, s1, s0, en ;
+
+     PARTS:
+     Or(a=x7, b=x6, out=temp1);
+     Or(a=x5, b=x4, out=temp2);
+     Or(a=x3, b=x2, out=temp3);
+     Or(a=x1, b=x0, out=temp4);
+     Or(a=temp1, b=temp2, out=s2);
+     Not(in=temp2, out=nottemp2);
+     And(a=nottemp2, b=temp3, out=t1);
+     Or(a=temp1, b=t1, out=s1);
+     Not(in=x6, out=notx6);
+     Not(in=x4, out=notx4);
+     Not(in=x2, out=notx2);
+     And(a=notx6, b=x5, out=w1);
+     And(a=notx6, b=notx4, out=t2);
+     And(a=notx2, b=x1, out=t3);
+     And(a=t2, b=x3, out=w2);
+     And(a=t2, b=t3, out=w3);
+     Or(a=x7, b=w1, out=d1);
+     Or(a=w2, b=w3, out=d2);
+     Or(a=d1, b=d2, out=s0);
+
+     Or(a=temp1, b=temp2, out=temp5);
+     Or(a=temp3, b=temp4, out=temp6);
+     Or(a=temp5, b=temp6, out=en);
+     
+ }

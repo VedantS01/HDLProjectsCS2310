@@ -1,0 +1,84 @@
+/*
+Author        :- Parth Ajmera cs19b065
+DateOfCreation:- 24-8-20 8:12 pm
+Last Modified:- 09:33 31-08-2020  : introduced the enable (en) bit in the output pins
+Purpose       :- 8-3 bit encoder
+Logic         :- An encoder deals with 2^n inputs and n outputs where
+                 we deal with only one high input, typically ith bit.
+                 for ith bit=1 and rest as 0, the output binary number
+		 must be equal to i. ie, in case of x3=1, output number
+		 y1,y0 should be 3 ie 1,1 each.
+
+		expression for
+		y2=x4+x5+x6+x7;
+		y1=x2+x3+x6+x7;
+		y0=x1+x3+x5+x7;
+*/
+
+CHIP Encoder83 
+{
+    IN x0,x1,x2,x3,x4,x5,x6,x7;
+    OUT y0,y1,y2,en;
+
+    PARTS:
+    Or(a=x1,b=x3,out=w1);
+    Or(a=x5,b=x7,out=w2);
+    Or(a=w2,b=w1,out=y0);	
+    Or(a=x2,b=x3,out=u1);
+    Or(a=x7,b=x6,out=u2);
+    Or(a=u2,b=u1,out=y1);
+    Or(a=x4,b=x5,out=w3);
+    Or(a=u2,b=w3,out=y2);    
+
+    Not(in=x0,out=notx0);
+    Not(in=x1,out=notx1);
+    Not(in=x2,out=notx2);
+    Not(in=x3,out=notx3);
+    Not(in=x4,out=notx4);
+    Not(in=x5,out=notx5);
+    Not(in=x6,out=notx6);
+    Not(in=x7,out=notx7);
+
+    And(a=notx0,b=notx1,out=t1);
+    And(a=notx2,b=notx3,out=t2);
+    And(a=notx4,b=notx5,out=t3);
+    And(a=notx6,b=notx7,out=t4);
+
+    And(a=t3,b=t4,out=q1);
+    And(a=x0,b=notx1,out=r1);
+    And(a=q1,b=t2,out=q2);
+    And(a=r1,b=q2,out=l0);
+
+    And(a=notx0,b=x1,out=r2);
+    And(a=r2,b=q2,out=l1);
+
+    And(a=t1,b=q1,out=q3);
+    And(a=notx2,b=x3,out=r3);
+    And(a=r3,b=q3,out=l3);
+
+    And(a=x2,b=notx3,out=r4);
+    And(a=r4,b=q3,out=l2);
+
+    And(a=t1,b=t2,out=q4);
+    And(a=notx5,b=x4,out=r5);
+    And(a=q4,b=t4,out=q5);
+    And(a=q5,b=r5,out=l4);
+
+    And(a=notx4,b=x5,out=r6);
+    And(a=r6,b=q5,out=l5);
+
+    And(a=q4,b=t3,out=q6);
+    And(a=notx7,b=x6,out=r7);
+    And(a=r7,b=q6,out=l6);
+
+    And(a=notx6,b=x7,out=r8);
+    And(a=r8,b=q6,out=l7);
+
+    Or(a=l0,b=l1,out=d1);
+    Or(a=l2,b=l3,out=d2);
+    Or(a=l4,b=l5,out=d3);
+    Or(a=l6,b=l7,out=d4);
+    Or(a=d1,b=d2,out=d5);
+    Or(a=d3,b=d4,out=d6);
+    Or(a=d6,b=d5,out=en);
+}

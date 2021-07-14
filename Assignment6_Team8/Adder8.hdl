@@ -1,0 +1,31 @@
+/***********************************************************
+ *
+ * $id$
+ * 8 bit adder/substracter with use of 4 bit CLA and higher order terms
+ * Chip name : Adder16
+ * IN : x[8] , y[8] , oper , signed 
+ * OUT : sum[8] , cy , of
+ *
+ * Version : 1.0
+ * Author : Vedant Ashish Saboo , CS19B074
+ * Created : 21:42 08-09-2020
+ * Last Modified : 21:42 08-09-2020 : fixed OverflowDetecter16 for detecting overflow in signed and unsigned opearands
+ *
+ * Chips used internally : inverter16, Xor16, CLA4H16, OverflowDetecter16, CLA4, And4Way, Or4Way
+ * Bugs : 
+ *******************************************************************/
+
+ CHIP Adder8 {
+    IN x[8] , y[8] , oper , signed ;
+    OUT sum[8] , cy , of ;
+
+    PARTS:
+    Inverter8(in=y, bit=oper, out=y1);
+    And8(a=x, b=y1, out=g);
+    Xor8(a=x, b=y1, out=p);
+    CLA4H8(p=p, g=g, c=c, c0=oper, c[7..7]=c7, carry=c8, carry=cy);
+    Xor8(a=p, b=c, out=sum);
+    OverflowDetecter8(c7=c7, c8=c8, oper=oper, of=of, signed=signed);
+    
+
+}
