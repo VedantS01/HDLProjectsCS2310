@@ -1,0 +1,27 @@
+TEAM 8
+Design for 16 bit Adder / Subtracter with 4 bit CLA chip using Higher order terms
+
+For i values ranging from 0 to 15,
+p_i = x_i (XOR) y_i
+g_i = x_i * y_i
+
+CLA chip is used as :
+c0 = c0
+c1 = p0*c0 + g0
+c2 = p1*p0*c0 + p1*g0 + g1
+c3 = p2*p1*p0*c0 + p2*p1*g0 + p2*g1 + g2
+c4 = p3*p2*p1*p0*c0 + p3*p2*p1*g0 + p3*p2*g1 + p3*g2 + g3
+
+pIk (k = 0, 1, 2, 3) and gIk are defined as 
+pIk = p(4k+3)*p(4k+2)*p(4k+1)*p(4k)
+gIk = p(4k+3)*p(4k+2)*p(4k+1)*g(4k) + p(4k+3)*p(4k+2)*g(4k+1) + p(4k+3)*g(4k+2) + g(4k+3)
+
+c(4k) = pIk*c0 + gIk
+
+4 CLAs are now employed to calculate all c0, c1, ... , c16
+
+For i values ranging from 0 to 15,
+sum_i = p_i (XOR) c_i
+
+OverflowDetecter16 takes in relevant parameters, c16, 15, oper, signed and outputs 'of' (overflow bit)
+--END OF FILE--

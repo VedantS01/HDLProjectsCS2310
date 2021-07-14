@@ -1,0 +1,31 @@
+/************************************
+ *
+ * $id$
+ * 8-bit overflow detecter circuit for 8-bit signed integer multiplier
+ * IN : ans[16],signx,signy
+ * OUT : out
+ * Author : Sanchit Gupta , CS19B071
+ * Created : 08:56 AM 08-09-2020
+ * Last Modified : 11:42 PM 10/20/2020 by vedant : fixed minor problems and provided naming conventions
+ *
+ ******************************************/
+
+ CHIP OverflowDetecterSignedM8{
+    IN ans[16],signx,signy;
+    OUT out;
+    
+    PARTS:
+    Xor(a=signx,b=signy,out=negative);
+    XNor(a=signx,b=signy,out=positive);
+
+    Or8Way(in=ans[8..15],out=temp0);
+    Or(a=ans[7], b=temp0, out=overflowPositive);
+    And8Way(in=ans[8..15],out=temp1);
+    And(a=ans[7], b=temp1, out=notOverflowNegative);
+    Not(in=notOverflowNegative,out=overflowNegative);
+
+    //following lines based on mux logic
+    And(a=positive,b=overflowPositive,out=overflowT1);
+    And(a=negative,b=overflowNegative,out=overflowT2);
+    Or(a=overflowT1,b=overflowT2,out=out);
+}

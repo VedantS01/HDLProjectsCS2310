@@ -1,0 +1,19 @@
+/**************************************************************
+ *
+ * $id$
+ * SetZeroFlag8 : deteremines whether a 8 bit number is zero or not
+ * 
+ * Author : Vedant Ashish Saboo , CS19B074
+ * 
+ ************************************************************/
+
+ CHIP SetZeroFlag8 {
+    IN in[8];
+    OUT zero;
+
+    PARTS:
+    Or8Way(in=in, out=notzero);
+    Not(in=notzero, out=zero);
+    
+    
+}

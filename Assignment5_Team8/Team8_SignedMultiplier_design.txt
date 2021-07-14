@@ -1,0 +1,25 @@
+TEAM 8
+
+Design for Signed Multiplier 8 bit
+
+1. SignExtend8to16 converts operands x[8] and y[8] into x0[16] and y0[16]
+
+2. PartialProductGenerator generates the partial products pp0 to pp7 by multiplying x with seperate bits of y
+Internally : For ppi, i!=7
+It Ands bits of x with yi; Shifts the result bits by i units to the left.
+For pp7,
+It inverses x and then Ands each bit with y[7], followed by shifting with 7 bits. The remaining bits (that arise to the right after the left shift, are fed with the value of y[7]
+
+3. Series of CSAReducer16 chips reduce the number of summands from 8 to 2
+Internally : 
+Three summands are taken together and all the bits are fed to Full Adders. The sum bits and carry bits (shifted by 1) are given as 16 bit bus outputs (two summands)
+
+4. Finally, two last summands are added using the Adder16 chip (design is provided seperately). First 8 bits are provided as output
+
+5. OverflowDetecterSignedM8 : a specialised circuit to generate the overflow bit by taking in relevant parameters, including the 16 bit product
+Internaly :
+It takes into account cases when the result is expected positive or negative and whether the maginitude of the answer exceeds the max value supported by 8 bit number
+
+6. Additionally, a few chips are provided to take care of particular cases, for instance, wheher the product is zero
+
+-- END OF DESIGN FILE --

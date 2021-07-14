@@ -1,0 +1,25 @@
+/*********************************************
+ *
+ * $id$
+ * Mux2to1 : 1bit 2 to 1 Multiplexer
+ * Version : 1.0
+ *
+ * Author : Team8
+ * Created : 18:12 21-09-2020
+ * Last Modified : 18:13 21-09-2020 by vedant
+ *
+ * Bugs :
+ ****************************************************/
+
+ CHIP Mux2to1 {
+
+    IN in0, in1, s;
+    OUT out;
+    PARTS:
+    Not (in=s , out=nots) ;
+    
+    And (a=in0, b=nots, out=w0);
+    And (a=in1, b=s, out=w1);
+
+    Or(a=w0, b=w1, out=out);
+}

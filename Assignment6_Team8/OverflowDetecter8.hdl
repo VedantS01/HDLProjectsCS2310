@@ -1,0 +1,23 @@
+/*********************************************************************
+ *
+ * $id$
+ * 8 bit overflow detecter for signed and unsigned adder outputs
+ *
+ * Version: 1.0
+ * Author: vedant Ashish Saboo , CS19B074
+ *
+ * Bugs:
+ *******************************************************************/
+
+ CHIP OverflowDetecter8 {
+    IN c7, c8, oper, signed;
+    OUT of;
+
+    PARTS:
+    Xor(a=c7, b=c8, out=tsigned);
+    Xor(a=c8, b=oper, out=tunsigned);
+    Not(in=signed, out=unsigned);
+    And(a=tsigned, b=signed, out=t1);
+    And(a=tunsigned, b=unsigned, out=t2);
+    Or(a=t1, b=t2, out=of);
+}

@@ -1,0 +1,28 @@
+/*********************************************
+ *
+ * $id$
+ * Mux8bit2to1 : 8bit 2 to 1 Multiplexer
+ * Version : 1.0
+ *
+ * Author : Team8
+ * Created : 18:12 21-09-2020
+ * Last Modified : 18:13 21-09-2020 by vedant
+ *
+ * Bugs :
+ ****************************************************/
+
+CHIP Mux8bit2to1 {
+
+    IN in0[8], in1[8], s;
+    OUT out[8];
+    PARTS:
+    Mux2to1(in0=in0[0], in1=in1[0], s=s, out=out[0]);
+    Mux2to1(in0=in0[1], in1=in1[1], s=s, out=out[1]);
+    Mux2to1(in0=in0[2], in1=in1[2], s=s, out=out[2]);
+    Mux2to1(in0=in0[3], in1=in1[3], s=s, out=out[3]);
+    Mux2to1(in0=in0[4], in1=in1[4], s=s, out=out[4]);
+    Mux2to1(in0=in0[5], in1=in1[5], s=s, out=out[5]);
+    Mux2to1(in0=in0[6], in1=in1[6], s=s, out=out[6]);
+    Mux2to1(in0=in0[7], in1=in1[7], s=s, out=out[7]);
+    
+}

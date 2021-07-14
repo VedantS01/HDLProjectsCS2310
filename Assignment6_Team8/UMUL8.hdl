@@ -1,0 +1,28 @@
+/************************************
+ *
+ * $id$
+ * UMUL8 : 8-bit unsigned integer multiplier
+ * IN : x[8], y[8]
+ * OUT : out[16], of
+ * Author : Parth Ajmera , CS19B065
+ * Created : 08:56 20-09-2020
+ *
+ ******************************************/
+
+CHIP UMUL8 {
+    IN x[8],y[8];
+    OUT out[16],of;
+
+    PARTS:
+	Unsigned8to16(in=x, out=x0);
+    Unsigned8to16(in=y, out=y0);
+    CalcPartialProductUnsigned8(x=x0, y=y0, pp0=pp0, pp1=pp1, pp2=pp2, pp3=pp3, pp4=pp4, pp5=pp5, pp6=pp6, pp7=pp7);
+   	CSAReducer16(a=pp0, b=pp1, c=pp2, c0=false, out1=s0, out2=c1);
+	CSAReducer16(a=pp3, b=pp4, c=pp5, c0=false, out1=s1, out2=c2);
+   	CSAReducer16(a=pp6, b=pp7, c=s0 , c0=false, out1=s2, out2=c3);
+	CSAReducer16(a=c1 , b=s1 , c=c2 , c0=false, out1=s3, out2=c4);
+   	CSAReducer16(a=s2 , b=c3 , c=s3 , c0=false, out1=s4, out2=c5);
+   	CSAReducer16(a=c4 , b=s4 , c=c5 , c0=false, out1=s5, out2=c6);  
+	Adder16(x=s5, y=c6, oper=false, sum=out, sum=outT, signed=false);
+	OverflowDetecterUnsignedM8(ans=outT, out=of);	
+}

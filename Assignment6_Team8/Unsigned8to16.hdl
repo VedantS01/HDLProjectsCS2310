@@ -1,0 +1,18 @@
+/************************************
+ *
+ * $id$
+ * Unsignedr8to16 : 8 to 16 bit converter for unsigned integers (by extending)
+ * IN : in[8]
+ * OUT : out[16]
+ * Author : Parth Ajmera , CS19B065
+ * Created : 08:56 20-09-2020
+ *
+ ******************************************/
+
+CHIP Unsigned8to16 {
+    IN in[8];
+    OUT out[16];
+
+    PARTS:
+    And16(a[0..7]=in, b=true, a[8..15]=false,out=out);
+}

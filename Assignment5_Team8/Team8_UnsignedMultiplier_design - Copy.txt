@@ -1,0 +1,22 @@
+TEAM 8
+
+Design for Unsigned Multiplier 8 bit
+
+1. Unsigned8to16 converts operands x[8] and y[8] into x0[16] and y0[16]
+
+2. CalcPartialProductUnsigned8 generates the partial products pp0 to pp7 by multiplying x with seperate bits of y
+Internally : For ppi
+It Ands bits of x with yi; Shifts the result bits by i units to the left.
+
+3. Series of CSAReducer16 chips reduce the number of summands from 8 to 2
+Internally : 
+Three summands are taken together and all the bits are fed to Full Adders. The sum bits and carry bits (shifted by 1) are given as 16 bit bus outputs (two summands)
+
+4. Finally, two last summands are added using the Adder16 chip (design is provided seperately). First 8 bits are provided as output
+
+5. OverflowDetecterUnsignedM8 : a specialised circuit to generate the overflow bit by taking in relevant parameters, including the 16 bit product
+Internaly :
+It determines whether the value represented by product bits is greater than the max value for an 8 bit unsigned number
+
+
+-- END OF DESIGN FILE --

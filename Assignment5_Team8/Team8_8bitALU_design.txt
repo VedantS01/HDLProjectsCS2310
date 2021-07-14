@@ -1,0 +1,43 @@
+Team 8
+
+Design for 8 bit ALU
+
+ALU8 chip has -
+3 buses of 8 bits : 2 for input and 1 for output
+1 bus of 3 bits : for opcode
+1 bit for U'/S : input bit for signed (signed)
+1 bit flag for overflow (of)
+1 bit flag for equality (eq)
+
+Opcodes stand respectively for :
+000 No Operation (NOP)
+001 And Operation
+010 Or Operation
+011 Xor Operation
+100 Signed/Unsigned Addition 
+101 Signed/Unsigned Subtraction
+110 Unsigned Inteerger multiplication (UMUL)
+111 Signed Integer multiplication (IMUL)
+
+__________________________________________________________________________
+
+For NOP, code simply outputs all zeroes
+For And, code uses And8.hdl chip
+For Or, code uses Or8.hdl chip
+For Xor, code uses Xor8.hdl chip
+For Addition, code uses Adder8.hdl chip with oper bit set to 0
+For Subtracion, code uses Adder8.hd chip with oper bit set to 1
+For UMUL, code uses UnsignedIntergerMultiplier8.hdl
+For IMUL, code uses SignedIntegerMultiplier8.hdl
+___________________________________________________________________________
+
+first four opcodes (msb is 0) are logical operations
+next four (msb = 1) are arithmetic operations
+
+code uses 2 8bit 4 to 1 multiplexers to determine which of the arithemetic and logical output is to be outputed.
+Then an 8 bit 2 to 1 multiplexer determines which of the two units is to be outputed.
+
+similarly, the code uses 2 1 bit 4 to 1 multiplexers in similar fashion for each of the overflow bits
+then a 1 bit 2 to 1 multiplexer for the final overflow bit
+
+--END OF DESIGN FILE-- 

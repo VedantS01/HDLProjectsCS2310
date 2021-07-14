@@ -1,0 +1,33 @@
+/*********************************************
+ *
+ * $id$
+ * Mux4to1 : 1bit 4 to 1 Multiplexer
+ * Version : 1.0
+ *
+ * Author : Team8
+ * Created : 18:12 21-09-2020
+ * Last Modified : 18:13 21-09-2020 by vedant
+ *
+ * Bugs :
+ ****************************************************/
+
+CHIP Mux4to1 {
+
+    IN in0, in1, in2, in3, s[2];
+    OUT out;
+    PARTS:
+    Not (in=s[0] , out=nots0) ;
+	Not (in=s[1] , out=nots1) ;
+
+	And (a=nots0 , b=nots1 , out=temp0) ;
+	And (a=nots1 , b=s[0] , out=temp1) ;
+	And (a=s[1], b=nots0 , out=temp2) ;
+	And (a=s[0] , b=s[1] , out=temp3) ;
+    
+    And (a=in0, b=temp0, out=w0);
+    And (a=in1, b=temp1, out=w1);
+    And (a=in2, b=temp2, out=w2);
+    And (a=in3, b=temp3, out=w3);
+
+    Or4Way(a=w0, b=w1, c=w2, d=w3, out=out);
+}

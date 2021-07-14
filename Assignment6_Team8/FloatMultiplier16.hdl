@@ -1,0 +1,62 @@
+/*********************************************************************************
+ *
+ * $id$
+ * File : FloatMultiplier16.hdl
+ * Chip : FloatMultiplier16 : 16 bit floating point number multiplier
+ * 
+ * 16 bit Floating point number : bit 15 is sign bit, bits 14 to 7 are exponent bits, bits 6 to 0 are mantissa bits
+ * NOTE : This representation is exclusive of all special cases that are otherwise included in IEEE standard. 
+ * Exponent bias value : 127
+ *
+ * Version : 2.0
+ *
+ * Author : Team 8 : Vedant (CS19B074), Sanchit (CS19B071), Parth (CS19B065)
+ * Created : 28-09-2020 15:05
+ * Last Modified : 01-10-2020 19:12 by vedant
+ *
+ * Bugs : this 16 does not take care of the special cases that arise out of 16 bit floating point representation
+ * DO NOT ATTEMPT TO TEST THE CHIP WITH CASES THAT INVOKE SPECIAL CASES LIKE EXPONENT PART BEING 0x00 OR 0xff
+ ***********************************************************************************/
+
+CHIP FloatMultiplier16 {
+    IN x[16], y[16]; //x and y are 16 bit operands
+    OUT out[16], valid, of; //out is 16 bit result, of is overflow and tr is truncation
+
+    PARTS:
+    //code here
+
+    //sign bit of out is simply sign bit of x XOR sign bit of y
+    Xor(a=x[15], b=y[15], out=out[15]);
+
+    //determining whether the result is valid or not
+    Or8Way(in=x[7..14], out=isnotzeroxe);
+    Or8Way(in=y[7..14], out=isnotzeroye);
+    And8Way(in=x[7..14], out=isallonesxe);
+    Not(in=isallonesxe, out=isnotallonesxe);        
+    And8Way(in=y[7..14], out=isallonesye);
+    Not(in=isallonesye, out=isnotallonesye);
+    And4Way(a=isnotallonesxe, b=isnotallonesye, c=isnotzeroxe, d=isnotzeroye, out=validT); //validT in an inetrnal pin. Since we also have to consider that the product is valid.
+
+    //mantissa multiplier is an 8 bit unsigned multiplier, with a 16 bit output
+    UMUL8(x[0..6]=x[0..6], x[7..7]=true, y[0..6]=y[0..6], y[7..7]=true, out[15]=mantissa15, out[7..13]=mantissa0713, out[8..14]=mantissa0814);
+
+    //exponent 
+    Adder8(x[0..7]=x[7..14], y[0..7]=y[7..14], oper=false, signed=false, sum=xePLUSye, cy=extra) ;
+
+    //bias adjustments based on mantissa[15] bit
+    Adder9(x[0..7]=xePLUSye, x[8]=extra, y[0..6]=true, y[7..8]=false, oper=true, signed=false, sum[0..7]=exponent0, sum[8]=ofT0) ;
+    Adder9(x[0..7]=xePLUSye, x[8]=extra, y[1..6]=true, y[0..0]=false, y[7..8]=false, oper=true, signed=false, sum[0..7]=exponent1, sum[8]=ofT1) ;
+    Mux8bit2to1(in0=exponent0, in1=exponent1, s=mantissa15, out=out[7..14], out=exponent) ; //exponent in case of all valid cases
+
+    //Barrel shifter, for normalising the mantissa
+    Mux8bit2to1(in0[0..6]=mantissa0713, in1[0..6]=mantissa0814, s=mantissa15, out[0..6]=out[0..6]) ;
+
+    //overflow detecter
+    Mux2to1(in0=ofT0, in1=ofT1, s=mantissa15, out=of, out=ofT) ;
+
+    //valid bit detecter
+    Not(in=ofT, out=notof);
+    And(a=validT, b=notof, out=valid);
+    
+    //end of code
+}

@@ -1,0 +1,13 @@
+/***********************
+ *
+ * FullAdder.hdl
+ *
+ * BUILT IN CHIP
+ ****************************/
+
+CHIP FullAdder {
+    IN a, b, c;
+    OUT sum, carry;
+
+    BUILTIN FullAdder;
+}
